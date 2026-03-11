@@ -40,9 +40,10 @@ def get_videos():
 @app.get("/api/videos/stream/{name}/{chunkId}")
 def send_video(name: str, chunkId : str):
     if ".ts" in chunkId:
-        folder_path = Path(f"./outputs/{name}/")
+        folder_path = Path(f"backend/outputs/{name}/")
         segment = "segments"
         file_path = folder_path / segment / chunkId
+        print(file_path)
         if not file_path.exists():
             raise HTTPException(status_code=404, detail="File Not found")
         return FileResponse(
@@ -53,7 +54,6 @@ def send_video(name: str, chunkId : str):
     elif ".m3u8" in chunkId:
         folder_path = Path(f"backend/outputs/{name}/")
         file_path = folder_path / "manifest.m3u8"
-        print(file_path)
         if not file_path.exists():
             raise HTTPException(status_code=404, detail="File Not found")
         return FileResponse(

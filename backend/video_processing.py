@@ -41,5 +41,5 @@ def process_video(video_name: str) -> None:
 
     ffmpeg.run(stream)
 
-process_video("RRR.mp4")
+process_video("NAME.mp4")
 
