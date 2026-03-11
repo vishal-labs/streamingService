@@ -25,7 +25,7 @@ def process_video(video_name: str) -> None:
 
     stream = ffmpeg.output(
         stream,
-        os.path.join(output_dir, "720_out.m3u8"),
+        os.path.join(output_dir, "manifest.m3u8"),
         vcodec="libx264",
         acodec="aac",
         hls_time=2,
