@@ -176,21 +176,37 @@ def scan_existing_files():
             job_queue.put(file)
 
 
-threading.Thread(target=worker, daemon=True).start()
+observer = None
 
-scan_existing_files()
 
-observer = Observer()
-observer.schedule(InputHandler(), INPUTS_DIR, recursive=False)
-observer.start()
+def start_watcher():
+    """Start the watchdog observer and worker thread (non-blocking)."""
+    global observer
 
-print("Watching folder:", INPUTS_DIR)
+    threading.Thread(target=worker, daemon=True).start()
+    scan_existing_files()
 
-try:
-    while True:
-        time.sleep(1)
+    observer = Observer()
+    observer.schedule(InputHandler(), INPUTS_DIR, recursive=False)
+    observer.start()
 
-except KeyboardInterrupt:
-    observer.stop()
+    print("Watching folder:", INPUTS_DIR)
 
-observer.join()
+
+def stop_watcher():
+    """Stop the watchdog observer."""
+    global observer
+
+    if observer:
+        observer.stop()
+        observer.join()
+        print("Watcher stopped.")
+
+
+if __name__ == "__main__":
+    start_watcher()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        stop_watcher()

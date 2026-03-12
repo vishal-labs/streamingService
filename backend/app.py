@@ -2,8 +2,18 @@ from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pathlib import Path
+from contextlib import asynccontextmanager
+from backend.video_processing import start_watcher, stop_watcher
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app):
+    start_watcher()
+    yield
+    stop_watcher()
+
+app = FastAPI(lifespan=lifespan)
+
 
 app.add_middleware(
     CORSMiddleware,

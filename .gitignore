@@ -3,3 +3,6 @@ venv/
 inputs/
 outputs/
 __pycache__/
+node_modules/
+frontend/
+.DS_Store
